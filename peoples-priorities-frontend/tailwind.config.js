@@ -7,15 +7,28 @@ export default {
   theme: {
     extend: {
       colors: {
+        coral: {
+          DEFAULT: '#FF6B35',
+          light: '#FFE8DC',
+          dark: '#B8431D',
+        },
+        'surface-warm': '#FFF8F0',
+        'surface-app': '#FAFAF8',
+        'border-soft': '#ECE7DE',
         primary: {
-          DEFAULT: '#1D9E75', // teal green
-          dark: '#0F6E56',
+          DEFAULT: '#FF6B35',
+          dark: '#B8431D',
         },
         accent: {
-          DEFAULT: '#534AB7', // AI purple
+          DEFAULT: '#534AB7',
         },
-        surface: '#F8F9FA', // background
-        card: '#FFFFFF',
+        customTeal: '#0F6E56',
+        customPurple: '#534AB7',
+        customAmber: '#854F0B',
+        customSuccess: '#1D9E75',
+        customTextNearBlack: '#1A1A1A',
+        customTextMuted: '#5F5E5A',
+        customTextPlaceholder: '#888780',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

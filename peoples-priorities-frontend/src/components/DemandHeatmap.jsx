@@ -43,16 +43,18 @@ export default function DemandHeatmap({ heatmapPoints }) {
   const categories = ['All', 'Roads', 'Water', 'Health', 'Education', 'Drainage'];
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full min-h-[450px]">
-      <div className="p-4 border-b border-gray-100 flex flex-wrap gap-2 bg-gray-50">
+    <div className="bg-white rounded-[12px] border border-[#ECE7DE] overflow-hidden flex flex-col h-full min-h-[450px]">
+      {/* Filter pills: active pill gets dark fill (#1A1A1A), inactive outline */}
+      <div className="p-4 border-b border-[#ECE7DE] flex flex-wrap gap-2 bg-[#FAFAF8]">
         {categories.map((cat) => (
           <button
             key={cat}
+            type="button"
             onClick={() => setFilter(cat)}
-            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all border ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-sans font-medium transition-all border ${
               filter === cat
-                ? 'bg-primary text-white border-primary shadow-sm shadow-primary/10'
-                : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-100'
+                ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]'
+                : 'bg-white text-[#5F5E5A] border-[#ECE7DE] hover:bg-slate-50'
             }`}
           >
             {cat}
@@ -60,7 +62,8 @@ export default function DemandHeatmap({ heatmapPoints }) {
         ))}
       </div>
 
-      <div className="flex-1 w-full relative">
+      {/* Map container: rounded 12px corners matching card style */}
+      <div className="flex-grow w-full relative h-[380px]">
         {googleMapsKey ? (
           <LoadScript googleMapsApiKey={googleMapsKey} libraries={['visualization']}>
             <GoogleMap
@@ -81,10 +84,10 @@ export default function DemandHeatmap({ heatmapPoints }) {
             </GoogleMap>
           </LoadScript>
         ) : (
-          <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-center p-6 text-gray-500">
-            <div>
-              <p className="font-semibold text-gray-600">Google Maps API key not configured</p>
-              <p className="text-xs text-gray-400 mt-1">Provide VITE_GOOGLE_MAPS_API_KEY in your env settings.</p>
+          <div className="absolute inset-0 bg-[#FAFAF8] flex items-center justify-center text-center p-6 text-[#5F5E5A]">
+            <div className="space-y-1">
+              <p className="font-sans font-medium text-[#1A1A1A] text-sm">Map unavailable — check connection</p>
+              <p className="text-xs text-[#888780] max-w-xs mx-auto">Please configure a valid Google Maps API key in your environment settings.</p>
             </div>
           </div>
         )}

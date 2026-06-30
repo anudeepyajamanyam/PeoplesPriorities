@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { FileText, Mic, Camera, ArrowLeft } from 'lucide-react';
-import toast from 'react-hot-toast';
 import TextSubmitForm from '../components/TextSubmitForm';
 import VoiceRecorder from '../components/VoiceRecorder';
 import PhotoUpload from '../components/PhotoUpload';
 import { useSubmission } from '../hooks/useSubmission';
+import Navbar from '../components/Navbar';
 
 export default function SubmitPage() {
   const [searchParams] = useSearchParams();
   const constituencyId = searchParams.get('constituencyId') || 'KA-01';
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('text');
+  const [lang, setLang] = useState('en-IN');
   
   const { submitting, handleTextSubmit, handleVoiceSubmit, handlePhotoSubmit } = useSubmission();
 
@@ -44,53 +45,57 @@ export default function SubmitPage() {
   };
 
   return (
-    <div className="min-h-screen bg-surface flex flex-col justify-between">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-100 py-3.5 px-6 flex items-center justify-between shadow-sm">
-        <button
-          onClick={() => navigate('/')}
-          className="flex items-center gap-1.5 text-sm font-semibold text-gray-600 hover:text-primary transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" /> Back to Home
-        </button>
-        <span className="bg-teal-50 text-primary border border-teal-100 text-xs font-bold px-3 py-1 rounded-full">
-          Constituency ID: {constituencyId}
-        </span>
-      </header>
+    <div className="min-h-screen bg-[#FAFAF8] flex flex-col justify-between font-sans">
+      {/* Shared Navbar */}
+      <Navbar lang={lang} setLang={setLang} showMpPortal={true} />
 
       {/* Main Container */}
       <main className="flex-1 max-w-2xl mx-auto w-full px-6 py-12 space-y-6">
-        {/* Tab Controls */}
-        <div className="bg-white p-1.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+        
+        {/* Back navigation and constituency badge */}
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center gap-1.5 text-xs font-sans font-medium text-[#5F5E5A] hover:text-[#FF6B35] transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" /> Back to home
+          </button>
+          <span className="bg-[#FFE8DC] text-[#B8431D] border border-[#ECE7DE] text-[11px] font-sans font-medium px-3 py-1 rounded-full uppercase tracking-wider">
+            Constituency ID: {constituencyId}
+          </span>
+        </div>
+
+        {/* Tab Controls - Pill-style tabs */}
+        <div className="bg-white p-1.5 rounded-[12px] border border-[#ECE7DE] flex items-center justify-between gap-1">
           <button
             onClick={() => setActiveTab('text')}
-            className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
+            className={`flex-grow py-2.5 rounded-[10px] text-xs font-sans font-medium transition-all flex items-center justify-center gap-2 ${
               activeTab === 'text'
-                ? 'bg-primary text-white shadow-sm'
-                : 'text-gray-600 hover:bg-gray-50'
+                ? 'bg-[#FF6B35] text-white'
+                : 'text-[#5F5E5A] hover:bg-slate-50'
             }`}
           >
-            <FileText className="w-4 h-4" /> Text Form
+            <FileText className="w-4 h-4" /> Text form
           </button>
           <button
             onClick={() => setActiveTab('voice')}
-            className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
+            className={`flex-grow py-2.5 rounded-[10px] text-xs font-sans font-medium transition-all flex items-center justify-center gap-2 ${
               activeTab === 'voice'
-                ? 'bg-primary text-white shadow-sm'
-                : 'text-gray-600 hover:bg-gray-50'
+                ? 'bg-[#FF6B35] text-white'
+                : 'text-[#5F5E5A] hover:bg-slate-50'
             }`}
           >
-            <Mic className="w-4 h-4" /> Voice Recorder
+            <Mic className="w-4 h-4" /> Voice recorder
           </button>
           <button
             onClick={() => setActiveTab('photo')}
-            className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
+            className={`flex-grow py-2.5 rounded-[10px] text-xs font-sans font-medium transition-all flex items-center justify-center gap-2 ${
               activeTab === 'photo'
-                ? 'bg-primary text-white shadow-sm'
-                : 'text-gray-600 hover:bg-gray-50'
+                ? 'bg-[#FF6B35] text-white'
+                : 'text-[#5F5E5A] hover:bg-slate-50'
             }`}
           >
-            <Camera className="w-4 h-4" /> Photo Upload
+            <Camera className="w-4 h-4" /> Photo upload
           </button>
         </div>
 
@@ -118,7 +123,7 @@ export default function SubmitPage() {
         )}
       </main>
 
-      <footer className="bg-white border-t border-gray-100 py-4 px-6 text-center text-xs text-gray-400 font-semibold">
+      <footer className="bg-white border-t border-[#ECE7DE] py-6 px-6 text-center text-xs text-[#888780] font-sans font-medium">
         Built for Google Cloud Code for Communities Hackathon 2025
       </footer>
     </div>

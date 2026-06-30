@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Camera, Image as ImageIcon, Loader2, Send, MapPin } from 'lucide-react';
+import { Camera, Loader2, Send, MapPin } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { submitPhoto } from '../api/axios';
 
@@ -61,7 +61,6 @@ export default function PhotoUpload({ constituencyId, onSubmit, submitting }) {
     setPreview(URL.createObjectURL(selected));
     setAiDescription('');
 
-    // Pre-upload photo to trigger Gemini vision analysis for instant user feedback
     const formData = new FormData();
     formData.append("photo", selected);
     formData.append("constituencyId", constituencyId);
@@ -96,29 +95,54 @@ export default function PhotoUpload({ constituencyId, onSubmit, submitting }) {
     onSubmit(formData);
   };
 
+  const isFormValid = file !== null && ward.trim().length > 0 && !analyzing;
+
   return (
-    <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm space-y-6">
+    <div className="bg-white p-6 rounded-[12px] border border-[#ECE7DE] space-y-6">
       <div>
-        <h3 className="text-sm font-semibold text-gray-800">Upload a Photo</h3>
-        <p className="text-xs text-gray-500 mt-0.5">Show the problem directly. Our AI will identify the issue and group it.</p>
+        <h3 className="text-[14px] font-sans font-medium text-[#1A1A1A]">Upload a photo</h3>
+        <p className="text-xs text-[#5F5E5A] mt-0.5">Show the problem directly. Our AI will identify the issue and group it.</p>
       </div>
 
       <div className="flex flex-col items-center justify-center">
         {preview ? (
-          <div className="relative w-full max-w-sm rounded-lg overflow-hidden border border-gray-200">
-            <img src={preview} alt="Preview" className="w-full h-48 object-cover" />
-            <button
-              onClick={() => { setFile(null); setPreview(null); setAiDescription(''); }}
-              className="absolute top-2 right-2 bg-black/60 hover:bg-black text-white px-2 py-1 rounded text-xs"
-            >
-              Change
-            </button>
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+            {/* Left: Thumbnail Preview */}
+            <div className="relative w-full rounded-[10px] overflow-hidden border border-[#ECE7DE]">
+              <img src={preview} alt="Preview" className="w-full h-40 object-cover" />
+              <button
+                type="button"
+                onClick={() => { setFile(null); setPreview(null); setAiDescription(''); }}
+                className="absolute top-2 right-2 bg-black/60 hover:bg-black text-white px-2.5 py-1 rounded-[10px] text-[11px] font-sans font-medium transition-colors"
+              >
+                Change
+              </button>
+            </div>
+
+            {/* Right: AI-extracted description */}
+            <div className="w-full space-y-2">
+              {analyzing ? (
+                <div className="flex flex-col items-center justify-center py-8 bg-[#ECE8F7]/20 border border-[#ECE8F7]/40 rounded-[10px] space-y-2">
+                  <Loader2 className="w-5 h-5 animate-spin text-[#534AB7]" />
+                  <span className="text-[11px] font-sans font-medium text-[#534AB7] uppercase tracking-wider">Gemini analyzing...</span>
+                </div>
+              ) : (
+                aiDescription && (
+                  <div className="bg-[#ECE8F7]/20 p-4 rounded-[10px] border border-[#ECE8F7]/40 space-y-1.5">
+                    <span className="inline-block text-[10px] font-sans font-medium bg-[#ECE8F7] text-[#534AB7] px-2 py-0.5 rounded-full uppercase tracking-wider">
+                      AI detected
+                    </span>
+                    <p className="text-xs text-[#5F5E5A] leading-relaxed font-normal">"{aiDescription}"</p>
+                  </div>
+                )
+              )}
+            </div>
           </div>
         ) : (
-          <label className="w-full max-w-sm h-40 border-2 border-dashed border-gray-300 hover:border-primary rounded-xl flex flex-col items-center justify-center cursor-pointer transition-colors bg-gray-50">
-            <Camera className="w-8 h-8 text-gray-400 mb-2" />
-            <span className="text-sm font-semibold text-gray-700">Take photo or upload image</span>
-            <span className="text-xs text-gray-400 mt-1">JPEG/PNG formats</span>
+          <label className="w-full max-w-sm h-40 border-2 border-dashed border-[#FF6B35]/30 hover:border-[#FF6B35] rounded-[12px] flex flex-col items-center justify-center cursor-pointer transition-colors bg-[#FAFAF8]">
+            <Camera className="w-8 h-8 text-[#888780] mb-2" />
+            <span className="text-sm font-sans font-medium text-[#1A1A1A]">Take photo or upload image</span>
+            <span className="text-xs text-[#888780] mt-1">JPEG/PNG formats</span>
             <input
               type="file"
               accept="image/*"
@@ -129,22 +153,8 @@ export default function PhotoUpload({ constituencyId, onSubmit, submitting }) {
         )}
       </div>
 
-      {analyzing && (
-        <div className="flex items-center justify-center gap-2 bg-teal-50/50 p-4 rounded-lg border border-teal-100">
-          <Loader2 className="w-4 h-4 animate-spin text-primary" />
-          <span className="text-xs font-semibold text-teal-800">Gemini analyzing photograph...</span>
-        </div>
-      )}
-
-      {aiDescription && (
-        <div className="bg-teal-50 p-4 rounded-lg border border-teal-100">
-          <h4 className="text-xs font-bold text-teal-900 uppercase tracking-wider mb-1">AI Extracted Summary</h4>
-          <p className="text-sm text-teal-800">"{aiDescription}"</p>
-        </div>
-      )}
-
       <div>
-        <label className="block text-sm font-semibold text-gray-800 mb-1.5">
+        <label className="block text-[13px] font-sans font-medium text-[#1A1A1A] mb-1.5">
           Your Ward or Locality Name:
         </label>
         <input
@@ -152,38 +162,49 @@ export default function PhotoUpload({ constituencyId, onSubmit, submitting }) {
           value={ward}
           onChange={(e) => setWard(e.target.value)}
           placeholder="E.g. Thanisandra Locality"
-          className="w-full p-2.5 border border-gray-200 rounded-lg text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none"
+          className="w-full h-[44px] px-3 border border-[#ECE7DE] rounded-[10px] text-sm text-[#1A1A1A] placeholder-[#888780] focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FFE8DC] outline-none font-sans font-medium transition-all"
           required
         />
       </div>
 
-      <div className="border-t border-gray-100 pt-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="border-t border-[#ECE7DE]/50 pt-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <button
           type="button"
           onClick={handleFetchLocation}
-          className="flex items-center justify-center gap-2 border border-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+          className="flex items-center justify-center gap-2 border border-[#ECE7DE] text-[#5F5E5A] hover:bg-slate-50 px-4 py-2.5 rounded-[10px] text-xs font-sans font-medium transition-colors"
         >
           {mapLoading ? (
-            <Loader2 className="w-4 h-4 animate-spin text-primary" />
+            <Loader2 className="w-4 h-4 animate-spin text-[#FF6B35]" />
           ) : (
-            <MapPin className="w-4 h-4 text-primary" />
+            <MapPin className="w-4 h-4 text-[#FF6B35]" />
           )}
           {location ? "Location Pinned ✓" : "Pin My Location"}
         </button>
 
-        <button
-          type="button"
-          onClick={handleSend}
-          disabled={submitting || !file || !ward.trim() || analyzing}
-          className="bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2 shadow-md shadow-primary/10 disabled:opacity-50"
-        >
-          {submitting ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Send className="w-4 h-4" />
+        <div className="flex flex-col items-end gap-1">
+          <button
+            type="button"
+            onClick={handleSend}
+            disabled={submitting || !isFormValid}
+            className={`px-6 py-2.5 rounded-[10px] text-xs font-sans font-medium transition-colors flex items-center justify-center gap-2 ${
+              isFormValid 
+                ? 'bg-[#FF6B35] hover:bg-[#B8431D] text-white' 
+                : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+            }`}
+          >
+            {submitting ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Send className="w-4 h-4" />
+            )}
+            Submit suggestion
+          </button>
+          {!isFormValid && (
+            <span className="text-[10px] text-[#888780] font-sans">
+              * Please upload a photograph and specify your locality to submit
+            </span>
           )}
-          Submit Suggestion
-        </button>
+        </div>
       </div>
     </div>
   );

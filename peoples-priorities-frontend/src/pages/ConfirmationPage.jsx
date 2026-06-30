@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CheckCircle2, ArrowRight, RefreshCcw } from 'lucide-react';
+import { Check, ArrowRight, RotateCcw } from 'lucide-react';
 
 export default function ConfirmationPage() {
   const location = useLocation();
@@ -16,42 +16,60 @@ export default function ConfirmationPage() {
   const truncatedId = submissionId.substring(0, 8);
 
   return (
-    <div className="min-h-screen bg-surface flex items-center justify-center px-6">
-      <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-xl max-w-md w-full text-center space-y-6">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-50 text-emerald-500 border border-emerald-100">
-          <CheckCircle2 className="w-10 h-10" />
+    <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center px-6 font-sans">
+      {/* Pulse dot style */}
+      <style>{`
+        @keyframes pulse-dot {
+          0% { transform: scale(0.8); opacity: 0.5; }
+          50% { transform: scale(1.2); opacity: 1; }
+          100% { transform: scale(0.8); opacity: 0.5; }
+        }
+        .animate-pulse-dot {
+          animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+      `}</style>
+
+      <div className="bg-white p-8 rounded-[14px] border border-[#ECE7DE] max-w-md w-full text-center space-y-6">
+        {/* Large success state: green checkmark in a circle */}
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#E3F2ED] text-[#1D9E75] border border-[#ECE7DE]">
+          <Check className="w-8 h-8" />
         </div>
 
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-gray-900">Suggestion Submitted!</h2>
-          <p className="text-xs font-semibold text-gray-400 bg-gray-50 py-1.5 px-3 rounded-lg inline-block">
+          <h2 className="text-[24px] font-sans font-medium text-[#1A1A1A]">Suggestion submitted</h2>
+          <div className="inline-block bg-[#FAFAF8] text-[#5F5E5A] border border-[#ECE7DE] rounded-full px-3 py-1 text-xs font-mono">
             Reference ID: #{truncatedId}
-          </p>
+          </div>
         </div>
 
-        <p className="text-sm text-gray-600 leading-relaxed font-normal">
-          Our AI pipeline is currently analyzing submissions across your constituency. Your suggestion will be reviewed by your Member of Parliament's office.
+        <p className="text-[14px] text-[#5F5E5A] leading-relaxed font-normal">
+          Thank you for sharing your feedback. Our AI pipeline is analyzing submissions across your constituency to rank development priorities for your Member of Parliament's office.
         </p>
 
-        {themeLabel && (
-          <div className="bg-teal-50/50 p-4 rounded-xl border border-teal-100 text-left">
-            <span className="text-[10px] font-bold text-teal-800 uppercase block tracking-wider">AI Categorized Theme</span>
-            <span className="text-sm font-semibold text-teal-900 block mt-0.5">{themeLabel}</span>
+        {themeLabel ? (
+          <div className="bg-[#E3F2ED]/40 p-4 rounded-[10px] border border-[#ECE7DE] text-left space-y-1">
+            <span className="text-[10px] font-sans font-medium text-[#0F6E56] uppercase tracking-wider block">AI categorized theme</span>
+            <span className="text-sm font-sans font-medium text-[#1A1A1A] block">{themeLabel}</span>
+          </div>
+        ) : (
+          <div className="bg-[#FAFAF8] p-4 rounded-[10px] border border-[#ECE7DE] flex items-center justify-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-[#FF6B35] animate-pulse-dot" />
+            <span className="text-xs font-sans font-medium text-[#5F5E5A]">Your suggestion is being reviewed</span>
           </div>
         )}
 
-        <div className="border-t border-gray-50 pt-6 flex flex-col sm:flex-row gap-3">
+        <div className="border-t border-[#ECE7DE]/50 pt-6 flex flex-col sm:flex-row gap-3">
           <button
             onClick={() => navigate('/board/KA-01')}
-            className="flex-1 bg-primary hover:bg-primary-dark text-white py-2.5 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-md shadow-primary/10"
+            className="flex-grow bg-[#FF6B35] hover:bg-[#B8431D] text-white py-2.5 rounded-[10px] text-xs font-sans font-medium transition-colors flex items-center justify-center gap-1.5"
           >
-            View Priorities <ArrowRight className="w-4 h-4" />
+            View constituency priorities <ArrowRight className="w-4 h-4" />
           </button>
           <button
             onClick={() => navigate('/')}
-            className="flex-1 border border-gray-200 text-gray-700 py-2.5 rounded-lg text-sm font-semibold hover:bg-gray-50 transition-colors flex items-center justify-center gap-1.5"
+            className="flex-grow border border-[#ECE7DE] text-[#5F5E5A] py-2.5 rounded-[10px] text-xs font-sans font-medium hover:bg-slate-50 transition-colors flex items-center justify-center gap-1.5"
           >
-            <RefreshCcw className="w-4 h-4" /> Submit Another
+            <RotateCcw className="w-4 h-4" /> Submit another
           </button>
         </div>
       </div>

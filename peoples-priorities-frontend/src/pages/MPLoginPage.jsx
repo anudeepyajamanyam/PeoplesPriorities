@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Mail, Key, Loader2 } from 'lucide-react';
+import { Lock, Mail, Key, Loader2, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { signInWithEmailAndPassword } from '../firebase';
 
@@ -21,7 +21,6 @@ export default function MPLoginPage() {
       navigate('/mp/dashboard');
     } catch (err) {
       console.warn("Real login error", err);
-      // Hackathon demo convenience check: allow login bypass with correct fields or fake auth validation
       if (email.includes("@") && password.length >= 6) {
         sessionStorage.setItem('demoUser', 'true');
         toast.success("Demo Mode: Signed in successfully");
@@ -35,46 +34,56 @@ export default function MPLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-surface flex items-center justify-center px-6">
-      <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-xl max-w-md w-full space-y-6">
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-teal-50 text-primary border border-teal-100">
-            <Lock className="w-6 h-6" />
+    <div className="min-h-screen bg-[#FAFAF8] flex flex-col items-center justify-center px-6 font-sans">
+      
+      {/* Back to home */}
+      <button
+        onClick={() => navigate('/')}
+        className="mb-6 flex items-center gap-1.5 text-xs font-sans font-medium text-[#5F5E5A] hover:text-[#FF6B35] transition-colors"
+      >
+        <ArrowLeft className="w-3.5 h-3.5" /> Back to home
+      </button>
+
+      <div className="bg-white p-8 rounded-[14px] border border-[#ECE7DE] max-w-md w-full space-y-6">
+        <div className="text-center space-y-2.5">
+          {/* Lock icon badge: coral-tinted background, 38x38px, 10px radius */}
+          <div className="inline-flex items-center justify-center w-[38px] h-[38px] rounded-[10px] bg-[#FFE8DC] text-[#FF6B35]">
+            <Lock className="w-5 h-5" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900">Member of Parliament</h2>
-          <p className="text-xs text-gray-500 font-medium">Access your constituency priorities board dashboard</p>
+          <h2 className="text-[20px] font-sans font-medium text-[#1A1A1A]">Member of Parliament</h2>
+          <p className="text-xs text-[#5F5E5A]">Access your constituency priorities dashboard</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
-              Email Address:
+            <label className="block text-[11px] font-sans font-medium text-[#888780] uppercase tracking-wider mb-1.5">
+              Email address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+              <Mail className="absolute left-3.5 top-3 w-4 h-4 text-[#888780]" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="mp.office@parliament.in"
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                className="w-full h-[44px] pl-11 pr-4 border border-[#ECE7DE] rounded-[10px] text-sm text-[#1A1A1A] placeholder-[#888780] focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FFE8DC] outline-none font-sans font-medium transition-all"
                 required
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
-              Password:
+            <label className="block text-[11px] font-sans font-medium text-[#888780] uppercase tracking-wider mb-1.5">
+              Password
             </label>
             <div className="relative">
-              <Key className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+              <Key className="absolute left-3.5 top-3 w-4 h-4 text-[#888780]" />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none font-medium"
+                className="w-full h-[44px] pl-11 pr-4 border border-[#ECE7DE] rounded-[10px] text-sm text-[#1A1A1A] placeholder-[#888780] focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FFE8DC] outline-none font-sans font-medium transition-all"
                 required
               />
             </div>
@@ -83,15 +92,16 @@ export default function MPLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-primary hover:bg-primary-dark text-white py-3 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 shadow-md shadow-primary/10 disabled:opacity-50"
+            className="w-full h-[44px] bg-[#FF6B35] hover:bg-[#B8431D] text-white rounded-[10px] text-xs font-sans font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-            Sign In to Dashboard
+            Sign in to dashboard
           </button>
         </form>
 
-        <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 text-xs text-gray-400 text-center leading-normal">
-          For demo testing: use any email and a password of at least 6 characters (e.g. mp@demo.in / admin123).
+        {/* Demo helper box: soft amber-tinted info box */}
+        <div className="bg-[#FEF3C7]/40 p-4 rounded-[10px] border border-[#ECE7DE] text-xs text-[#854F0B] text-center leading-relaxed">
+          For demo testing: use any email and a password of at least 6 characters (e.g. <strong>mp@demo.in</strong> / <strong>admin123</strong>).
         </div>
       </div>
     </div>

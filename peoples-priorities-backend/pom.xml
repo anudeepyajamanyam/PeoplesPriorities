@@ -63,6 +63,11 @@
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.google.cloud.sql</groupId>
+            <artifactId>postgres-socket-factory</artifactId>
+            <version>1.18.1</version>
+        </dependency>
 
         <!-- Google Cloud -->
         <dependency>

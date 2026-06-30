@@ -10,17 +10,17 @@ const LANGUAGES = [
 
 export default function LanguageSelector({ selectedLanguage, onChange }) {
   return (
-    <div className="relative inline-block text-left">
-      <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm focus-within:ring-2 focus-within:ring-primary/20">
-        <Globe className="w-4 h-4 text-gray-500" />
+    <div className="relative inline-block">
+      <div className="flex items-center gap-1.5 bg-white px-3 py-2 rounded-full border border-[#ECE7DE] hover:border-[#FF6B35] transition-colors">
+        <Globe className="w-3.5 h-3.5 text-[#5F5E5A]" />
         <select
           value={selectedLanguage}
           onChange={(e) => onChange(e.target.value)}
-          className="bg-transparent text-sm font-medium text-gray-700 outline-none cursor-pointer pr-1"
+          className="bg-transparent text-[13px] font-sans font-medium text-[#5F5E5A] outline-none cursor-pointer pr-1"
           aria-label="Select Language"
         >
           {LANGUAGES.map((lang) => (
-            <option key={lang.code} value={lang.code} className="text-gray-800">
+            <option key={lang.code} value={lang.code} className="text-[#1A1A1A]">
               {lang.name}
             </option>
           ))}
