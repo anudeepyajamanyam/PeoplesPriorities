@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  db:
+    # Do not expose database ports to host in production
+    ports: []
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+        reservations:
+          memory: 512M
+
+  redis:
+    # Do not expose redis ports to host in production
+    ports: []
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  backend:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 1536M
+        reservations:
+          memory: 768M
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+
+  frontend:
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          memory: 128M

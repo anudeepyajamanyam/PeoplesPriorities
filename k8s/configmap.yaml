@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: default
+data:
+  DATABASE_URL: "jdbc:postgresql://postgres-service:5432/peoples_priorities"
+  DATABASE_USER: "postgres"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+  GCP_PROJECT_ID: "peoples-priorities-prod"
+  GCP_LOCATION: "us-central1"
+  AUDIO_BUCKET: "peoples-priorities-audio-prod"
+  PHOTO_BUCKET: "peoples-priorities-photos-prod"
+  CORS_ORIGINS: "https://peoplespriorities.gov.in"

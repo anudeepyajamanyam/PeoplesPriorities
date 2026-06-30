@@ -1,0 +1,23 @@
+# Backend build artifacts
+peoples-priorities-backend/target/
+peoples-priorities-backend/bin/
+peoples-priorities-backend/.settings/
+peoples-priorities-backend/.classpath
+peoples-priorities-backend/.project
+
+# Frontend build artifacts
+peoples-priorities-frontend/node_modules/
+peoples-priorities-frontend/dist/
+peoples-priorities-frontend/.env
+peoples-priorities-frontend/.env.local
+peoples-priorities-frontend/.env.development.local
+peoples-priorities-frontend/.env.test.local
+peoples-priorities-frontend/.env.production.local
+
+# IDE and OS files
+.idea/
+.vscode/
+*.class
+*.log
+.DS_Store
+Thumbs.db

@@ -1,0 +1,162 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/peoples_priorities}
+    username: ${DATABASE_USER:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: PeoplesPriorities-HikariPool
+      maximum-pool-size: 50
+      minimum-idle: 10
+      idle-timeout: 600000
+      connection-timeout: 30000
+      max-lifetime: 1800000
+      leak-detection-threshold: 60000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+      hibernate.format_sql: true
+      hibernate.jdbc.batch_size: 50
+      hibernate.order_inserts: true
+      hibernate.order_updates: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 52MB
+
+  # Redis Cache
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 20
+          max-idle: 10
+          min-idle: 5
+          max-wait: 2000ms
+
+  cache:
+    type: ${SPRING_CACHE_TYPE:caffeine}
+    redis:
+      time-to-live: 300000   # default 5-minute TTL (ms), overridden per-cache in CacheConfig
+
+  # Jackson global config
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+
+gcp:
+  project-id: ${GCP_PROJECT_ID:your-gcp-project-id}
+  location: us-central1
+  gcs:
+    audio-bucket: peoples-priorities-audio
+    photo-bucket: peoples-priorities-photos
+
+firebase:
+  credentials-path: ${FIREBASE_CREDENTIALS_PATH:}
+
+cors:
+  allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
+
+# Async Thread Pool (for AI pipeline)
+async:
+  ai-executor:
+    core-pool-size: 10
+    max-pool-size: 50
+    queue-capacity: 500
+    thread-name-prefix: ai-task-
+
+# Spring Actuator + Prometheus
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics,caches,circuitbreakers
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+    prometheus:
+      enabled: true
+  health:
+    redis:
+      enabled: true
+    db:
+      enabled: true
+  metrics:
+    tags:
+      application: peoples-priorities
+    export:
+      prometheus:
+        enabled: true
+
+# Resilience4j Circuit Breakers
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        register-health-indicator: true
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 15s
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 80
+        slow-call-duration-threshold: 10s
+        record-exceptions:
+          - java.io.IOException
+          - java.util.concurrent.TimeoutException
+          - com.google.api.gax.rpc.UnavailableException
+          - com.google.api.gax.rpc.DeadlineExceededException
+    instances:
+      gemini-cb:
+        base-config: default
+        wait-duration-in-open-state: 30s
+        failure-rate-threshold: 40
+      gcp-cb:
+        base-config: default
+        wait-duration-in-open-state: 20s
+  retry:
+    configs:
+      default:
+        max-attempts: 3
+        wait-duration: 2s
+        exponential-backoff-multiplier: 2
+    instances:
+      gemini-retry:
+        base-config: default
+        max-attempts: 2
+      gcp-retry:
+        base-config: default
+        max-attempts: 3
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.peoplespriorities: INFO
+    org.springframework.security: WARN
+    org.flywaydb: INFO
+    io.github.resilience4j: INFO
+    org.springframework.cache: DEBUG
