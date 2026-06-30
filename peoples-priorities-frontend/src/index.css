@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply antialiased bg-surface text-gray-700;
+    @apply antialiased bg-surface-app text-slate-800;
   }
 }
 
@@ -34,7 +34,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border-left-color: #1D9E75;
+  border-left-color: #FF6B35;
   animation: spin 1s linear infinite;
 }
 
