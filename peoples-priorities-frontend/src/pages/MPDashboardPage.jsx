@@ -127,6 +127,14 @@ export default function MPDashboardPage() {
     window.open(`${baseURL}/api/priorities/export?constituencyId=${CONSTITUENCY_ID}`, '_blank');
   };
 
+  const handleCardClick = (priority) => {
+    // Match Priority DTO back to a theme shell
+    setSelectedTheme({
+      id: priority.id,
+      label: priority.themeLabel
+    });
+  };
+
   const handleDrawerTrigger = async (priority) => {
     try {
       const themes = await getThemes(CONSTITUENCY_ID);
