@@ -230,7 +230,33 @@ export default function MPDashboardPage() {
           </div>
 
           {/* Right panel: Heatmap */}
-          <div className="lg:col-span-5 space-y-4">
+          <div className="lg:col-span-5 space-y-6">
+            {/* MP Representative Profile Card */}
+            <div className="bg-white p-5 rounded-[12px] border border-[#ECE7DE] space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-[#FFE8DC] text-[#FF6B35] flex items-center justify-center font-sans font-medium text-lg shrink-0 select-none">
+                  AY
+                </div>
+                <div>
+                  <h4 className="font-sans font-medium text-[#1A1A1A] text-[15px]">Hon. Anudeep Yajamanyam</h4>
+                  <span className="inline-flex items-center gap-1 text-[10px] font-sans font-medium bg-[#E3F2ED] text-[#0F6E56] px-2 py-0.5 rounded-full uppercase tracking-wider mt-0.5">
+                    ✓ Lok Sabha Member
+                  </span>
+                </div>
+              </div>
+              
+              <div className="border-t border-[#ECE7DE]/50 pt-3 grid grid-cols-2 gap-4 text-xs">
+                <div>
+                  <span className="text-[#888780] block text-[10px] uppercase tracking-wider">Constituency</span>
+                  <span className="text-[#1A1A1A] font-sans font-medium">Bengaluru North (KA)</span>
+                </div>
+                <div>
+                  <span className="text-[#888780] block text-[10px] uppercase tracking-wider">Official Term</span>
+                  <span className="text-[#1A1A1A] font-sans font-medium">2024 - 2029</span>
+                </div>
+              </div>
+            </div>
+
             <h3 className="font-sans font-medium text-[#1A1A1A] text-[15px]">Demand spatial heatmap</h3>
             <DemandHeatmap heatmapPoints={heatmapPoints} />
           </div>
